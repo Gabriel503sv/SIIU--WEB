@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
+//Iniciar session
+Route::get('Login', [AuthController::class, 'login'])->name('login');
+//Verficar datos de session
+Route::post('Login', [AuthController::class, 'loginVerify'])->name('login.verify');
+//Cerrar session
+Route::post('signOut', [AuthController::class, 'signOut'])->name('signOut');
+
+
+Route::get('dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+
+
