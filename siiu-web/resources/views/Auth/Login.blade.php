@@ -1,58 +1,64 @@
-<!doctype html>
-<html lang="en">
+@extends('layouts.user_type.guest')
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200;500;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
-        integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous" />
-
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
-    <title>Login | SIIU</title>
-</head>
-
-<body class="bg-dark">
-    <main class="login-design">
-        <div class="waves">
-            <img class="v45_104" src="{{ asset('img/v45_104.png') }}" alt="" />
-            <h1 class="Txt1">SISTEMAS INFORMATICOS</h1>
-        </div>
-        <div class="login">
-            <div class="login-data">
-                <img class="v45_145" src="{{ asset('img/v45_145.png') }}" width="200px" height="200px" alt="" />
-                <h1>Inicio de Sesión</h1>
-
+@section('content')
+<main class="main-content  mt-0">
+    <section>
+      <div class="page-header min-vh-75">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto vh-100">
+              <div class="card card-plain mt-6">
+                <div class="card-header pb-0 text-left bg-transparent">
+                  <div class="container-fluid d-flex justify-content-center">
+                    <img src="../assets/img/logos/Minerva6.png" alt="image" class="img-fluid" style="max-width: 60px; height: auto">
+                  </div>
+                  <h4 class="font-weight-bolder text-info text-gradient text-center" style="background-image: linear-gradient(120deg, #800000, #4b0000); color: white; border-color: transparent;">¡Bienvenido!</h4>
+                </div>
+                <div class="card-body pt-0">
                 <form action="{{ route('login.verify') }}" method="POST" class="mb-5">
                     @csrf
-                   
-
-                    <div class="input-group">
-                        <label class="input-fill">
-                            <input name="email" type="email" class="form-control" id="exampleInputEmail1"
-                                aria-describedby="emailHelp" required>
-                            <span class="input-label">Correo Electrónico</span>
-                            <i class="fas fa-envelope"></i>
-                        </label>
+                    <label>Correo</label>
+                    <div class="mb-3">
+                    <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+                      @error('email')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                      @enderror
                     </div>
-                    <div class="input-group">
-                        <label class="input-fill">
-                            <input name="password" type="password" class="form-control" id="exampleInputPassword1"
-                                required>
-                            <span class="input-label">Contraseña</span>
-                            <i class="fas fa-lock"></i>
-                        </label>
+                    <label>Contraseña</label>
+                    <div class="mb-3">
+                    <input name="password" type="password" class="form-control" id="exampleInputPassword1" required>
+                      @error('password')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                      @enderror
                     </div>
-                    <input type="submit" value="Iniciar Sesión" class="btn-login" />
-                </form>
-                <h6 class="Name">SIIU</h6>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
+                      <label class="form-check-label" for="rememberMe" >Recordar contraseña</label>
+                    </div>
+                    <div class="text-center">
+                      <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0" style="background-image: linear-gradient(120deg, #800000, #4b0000); color: white; border-color: transparent;">Ingresar</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                <small class="text-muted">¿Olvidaste tu contraseña? Restablece tu contraseña
+                  <a href="/login/forgot-password" class="text-info text-gradient font-weight-bold" style="background-image: linear-gradient(120deg, #800000, #4b0000); color: white; border-color: transparent;">aquí</a>
+                </small>
+                </div>
+              </div>
             </div>
+            <div class="col-md-6">
+              <div class="oblique position-absolute vh-100 top-0 h-100 d-md-block d-none me-n8">
+                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n10" style="background-image:url('../assets/img/Banner.png')"></div>
+              </div>
+            </div>
+          </div>
         </div>
-    </main>
+      </div>
+    </section>
+  </main>
+
+
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @if (session()->has('success'))
@@ -98,6 +104,4 @@
         });
     </script>
 
-</body>
-
-</html>
+  @endsection
