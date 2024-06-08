@@ -50,7 +50,7 @@
             </div>
             <div class="col-md-6">
               <div class="oblique position-absolute vh-100 top-0 h-100 d-md-block d-none me-n8">
-                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n10" style="background-image:url('../assets/img/Banner.png')"></div>
+                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n10" style="background-image:url('../assets/img/Banner2.jpg')"></div>
               </div>
             </div>
           </div>

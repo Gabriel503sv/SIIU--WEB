@@ -30,9 +30,9 @@
               Copyright © <script>
                 document.write(new Date().getFullYear())
               </script>
-              <a style="color: #252f40;" href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">UES</a>
+              <a style="color: #252f40;" href="http://fmoues.edu.sv/" class="font-weight-bold ml-1" target="_blank">FMO</a>
               -
-              <a style="color: #252f40;" href="https://www.updivision.com" class="font-weight-bold ml-1" target="_blank">FMO</a>.
+              <a. style="color: #252f40;" href="https://www.ues.edu.sv/" class="font-weight-bold ml-1" target="_blank">UES</a.>
             </p>
           </div>
         </div>
