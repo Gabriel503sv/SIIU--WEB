@@ -1,8 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Contracts\Role;
+use Spatie\Permission\Models\Role as ModelsRole;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,4 +38,5 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
     //usuario
     Route::resource('user', UserController::class);
+    Route::resource('role',RoleController::class);
 });

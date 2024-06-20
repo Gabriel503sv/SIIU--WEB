@@ -3,15 +3,14 @@
 @section('content')
 <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3  ">
     <div class="col-4 text-center mx-auto">
-        <img src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png" width="200px">
-        <h3 class="center">USUARIOS</h3>
+        <img src="https://cdn-icons-png.flaticon.com/512/5151/5151145.png" width="200px">
+        <h3 class="center">ROLES</h3>
     </div>
-    <div class="col-4">
-
-    </div>
+    
     <div class="col-4 text-center mx-auto">
+        
         <div class="py-5 ">
-            <button type="button" class="btn btn-rounded btn-md btn-primary me-3 me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Crear Usuario</button>
+            <button type="button" class="btn btn-rounded btn-md btn-primary me-3 me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Crear Role</button>
         </div>
 
     </div>
@@ -21,45 +20,22 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Crear Usuario</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Crear Role</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form class="row g-3 text-dark text-center" action="" method="POST" class="m-auto  w-form">
                     @csrf
-                    <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label">Usuario</label>
-                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="4" value="{{ old('name', $user->name ?? '') }}">
+                    <div class="col-md-12 mb-3">
+                        <label for="name" class="form-label">role</label>
+                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="4" value="{{ old('name', $role->name ?? '') }}">
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                         @enderror
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="email" class="form-label">Correo Electrónico</label>
-                        <input name="email" type="email" class="border-dark form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" value="{{ old('email', $user->email ?? '') }}">
-                        @error('email')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input name="password" type="password" class="border-dark form-control @error('password') is-invalid @enderror" id="password" required>
-                        @error('password')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="password_confirmation" class="form-label">Confirmar Contraseña</label>
-                        <input name="password_confirmation" type="password" class="border-dark form-control" id="password_confirmation">
-                    </div>
-
-
+                    
                     <div class="d-grid gap-2 col-6 mx-auto">
                         <button type="submit text-center" class="btn  btn-primary  " style="--bs-btn-opacity: .5;">REGISTRAR</button>
                     </div>
@@ -76,32 +52,30 @@
     <table id="example" class="table align-items-center mb-0" style="width:100% ">
         <thead class="table-primary text-center">
             <tr>
-                <th>#</th>
-                <th>Usuario</th>
-                <th>Email</th>
+                <th class="w-25">#</th>
+                <th class="w-50">ROLES</th>
                 <th class="w-25">ACCIONES</th>
+
 
             </tr>
         </thead>
         <tbody>
-            @foreach ($users as $key => $user)
+            @foreach ($roles as $key => $role)
             <tr>
                 <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
+                <td>{{ $role->name }}</td>
+
 
 
 
                 <td>
                     <div class="row gx-3">
+                        
                         <div class="col">
-                            <a href="{{ route('user.show', $user->id) }}" style="width: 100%" class="btn btn-info  mb-3"><i class='bx bxs-show'></i></a>
+                            <a href="{{ route('role.edit', $role->id) }}" style="width: 100%" class="btn btn-success  mb-3"><i class='bx bxs-edit-alt'></i></a>
                         </div>
                         <div class="col">
-                            <a href="{{ route('user.edit', $user->id) }}" style="width: 100%" class="btn btn-success  mb-3"><i class='bx bxs-edit-alt'></i></a>
-                        </div>
-                        <div class="col">
-                            <form method="POST" class="formulario-eliminar" action="{{ route('user.destroy', $user->id) }}">
+                            <form method="POST" class="formulario-eliminar" action="{{ route('role.destroy', $role->id) }}">
                                 @method('DELETE')
                                 @csrf
                                 <button style="width: 100%" class="btn btn-danger"><i class='bx bxs-trash'></i></button>

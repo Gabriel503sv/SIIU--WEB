@@ -24,12 +24,17 @@ class DatabaseSeeder extends Seeder
         DB::statement('ALTER TABLE informacion_personal AUTO_INCREMENT = 1;');
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
+        $this->call(RoleSeeder::class);
+        
         User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => Hash::make('1234'), // Recuerda cambiar esto por la contraseña real
-        ]);
+        ])->assignRole('Admin');
 
+        
+
+        
         
     }
 }
