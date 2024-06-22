@@ -1,19 +1,20 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-<div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3  ">
-    <div class="col-4 text-center mx-auto">
-        <img src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png" width="200px">
-        <h3 class="center">USUARIOS</h3>
-    </div>
-    <div class="col-4">
-
-    </div>
-    <div class="col-4 text-center mx-auto">
-        <div class="py-5 ">
-            <button type="button" class="btn btn-rounded btn-md btn-primary me-3 me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Crear Usuario</button>
+<div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3">
+    <div class="row">
+        <div class="col-md-4 text-center mx-auto">
+            <img src="https://www.pavilionweb.com/wp-content/uploads/2017/03/man-300x300.png" width="200px">
+            <h3 class="center">USUARIOS</h3>
         </div>
+        <div class="col-md-4">
 
+        </div>
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
+            <div>
+                <button type="button" class="btn btn-rounded btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Crear Usuario</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -114,6 +115,7 @@
         </tbody>
 
     </table>
+
 </div>
 
 
@@ -121,8 +123,54 @@
     $(document).ready(function() {
         $('#example').DataTable({
             responsive: true,
-        });
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": '<i class="fas fa-angle-double-left"></i>',
+                    "sLast": '<i class="fas fa-angle-double-right"></i>',
+                    "sNext": '<i class="fas fa-angle-right"></i>',
+                    "sPrevious": '<i class="fas fa-angle-left"></i>'
 
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                },
+                "buttons": {
+                    "copy": "Copiar",
+                    "colvis": "Visibilidad"
+                }
+            },
+            dom: '<"top"Bf>rt<"bottom"lip><"clear">',
+            buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                    titleAttr: 'Exportar a Excel',
+                    className: 'btn btn-success'
+                },
+                {
+                    extend: 'csvHtml5',
+                    text: '<i class="fas fa-file-csv"></i> Exportar a CSV',
+                    titleAttr: 'Exportar a CSV',
+                    className: 'btn btn-info'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf"></i> Exportar a PDF',
+                    titleAttr: 'Exportar a PDF',
+                    className: 'btn btn-danger'
+                }
+            ]
+        });
     });
 </script>
 

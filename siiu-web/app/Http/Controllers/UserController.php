@@ -8,6 +8,7 @@ use App\Models\InformacionPersonal;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 /**
  * Class UserController
@@ -21,8 +22,9 @@ class UserController extends Controller
     public function index()
     {
         $users = User::paginate();
-
-        return view('user.index', compact('users'))
+        $rolesCount = Role::withCount('users')->get(); // Obtener roles con el conteo de usuarios
+    
+        return view('user.index', compact('users', 'rolesCount'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
@@ -57,16 +59,15 @@ class UserController extends Controller
                 'name.required' => 'el nombre es requerido'
             ]);
 
-            
 
-            
+
+
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
             ]);
             return redirect()->route('users.index')->with('agregado', 'SI');
-
         } catch (Exception $e) {
 
             return redirect()->route('users.index')->with('agregado', 'NO');
@@ -89,8 +90,10 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::with('informacionPersonal')->find($id);
+        $roles = Role::all();
+        $userRoles = $user->roles->pluck('id')->toArray();
 
-        return view('user.edit', compact('user'));
+        return view('user.edit', compact('user', 'roles', 'userRoles'));
     }
 
     /**
@@ -99,7 +102,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         try {
-                
+
             // Validar los datos de entrada
             $request->validate([
                 'email' => 'required|unique:users,email,' . $user->id,
@@ -126,14 +129,17 @@ class UserController extends Controller
                 'dui.required' => 'El DUI es requerido',
                 'nacionalidad.required' => 'La nacionalidad es requerida'
             ]);
-    
+
             // Actualizar el usuario
             $userData = $request->only('name', 'email');
             if ($request->filled('password')) {
                 $userData['password'] = bcrypt($request->password);
             }
             $user->update($userData);
-    
+
+            // Asignar roles al usuario
+            $user->syncRoles($request->roles);
+
             // Actualizar la información personal
             $informacionPersonalData = $request->only('apellidos', 'nombres', 'fecha_nacimiento', 'genero', 'dui', 'nacionalidad');
             $informacionPersonal = $user->informacionPersonal;
@@ -143,15 +149,14 @@ class UserController extends Controller
                 $informacionPersonalData['user_id'] = $user->id;
                 InformacionPersonal::create($informacionPersonalData);
             }
-    
+
             // Confirmar la transacción
-            
-    
+
+
             return redirect()->route('user.index')->with('Actualizado', 'SI');
-    
         } catch (Exception $e) {
             // Revertir la transacción en caso de error
-           
+
             return redirect()->route('users.index')->with('Actualizado', 'NO');
         }
     }

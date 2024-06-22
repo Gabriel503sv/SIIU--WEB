@@ -60,8 +60,8 @@
             </tbody>
         </table>
     </div>
-    <div class="shadow-lg p-3 mb-5  rounded rounded-3 ">
-    <div class="bg-primary rounded rounded-3 p-2 m-2">
+    <!--<div class="shadow-lg p-3 mb-5  rounded rounded-3 ">
+        <div class="bg-primary rounded rounded-3 p-2 m-2">
             <h4 class="text-white">NUMEROS</h4>
         </div>
         <table id="example" class="table align-items-center mb-0 text-center" style="width:100% ">
@@ -85,7 +85,7 @@
             </tbody>
 
         </table>
-    </div>
+    </div>-->
 </div>
 
 @endsection

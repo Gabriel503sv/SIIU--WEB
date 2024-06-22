@@ -2,17 +2,19 @@
 
 @section('content')
 <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3  ">
-    <div class="col-4 text-center mx-auto">
-        <img src="https://cdn-icons-png.flaticon.com/512/5151/5151145.png" width="200px">
-        <h3 class="center">ROLES</h3>
-    </div>
-    
-    <div class="col-4 text-center mx-auto">
-        
-        <div class="py-5 ">
-            <button type="button" class="btn btn-rounded btn-md btn-primary me-3 me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Crear Role</button>
+    <div class="row">
+        <div class="col-4 text-center mx-auto">
+            <img src="https://cdn-icons-png.flaticon.com/512/5151/5151145.png" width="200px">
+            <h3 class="center">ROLES</h3>
         </div>
+        <div class="col-4 text-center mx-auto"></div>
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
 
+            <div class="py-5 ">
+                <button type="button" class="btn btn-rounded btn-md btn-primary me-3 me-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Crear Role</button>
+            </div>
+
+        </div>
     </div>
 </div>
 
@@ -35,7 +37,7 @@
                         </div>
                         @enderror
                     </div>
-                    
+
                     <div class="d-grid gap-2 col-6 mx-auto">
                         <button type="submit text-center" class="btn  btn-primary  " style="--bs-btn-opacity: .5;">REGISTRAR</button>
                     </div>
@@ -70,7 +72,7 @@
 
                 <td>
                     <div class="row gx-3">
-                        
+
                         <div class="col">
                             <a href="{{ route('role.edit', $role->id) }}" style="width: 100%" class="btn btn-success  mb-3"><i class='bx bxs-edit-alt'></i></a>
                         </div>
@@ -95,8 +97,76 @@
     $(document).ready(function() {
         $('#example').DataTable({
             responsive: true,
-        });
+            language: {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sSearch": "Buscar:",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": '<i class="fas fa-angle-double-left"></i>',
+                    "sLast": '<i class="fas fa-angle-double-right"></i>',
+                    "sNext": '<i class="fas fa-angle-right"></i>',
+                    "sPrevious": '<i class="fas fa-angle-left"></i>'
 
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                },
+                "buttons": {
+                    "copy": "Copiar",
+                    "colvis": "Visibilidad"
+                }
+            },
+            dom: '<"top"Bf>rt<"bottom"lip><"clear">',
+            buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
+                    titleAttr: 'Exportar a Excel',
+                    className: 'btn btn-success'
+                },
+                {
+                    extend: 'csvHtml5',
+                    text: '<i class="fas fa-file-csv"></i> Exportar a CSV',
+                    titleAttr: 'Exportar a CSV',
+                    className: 'btn btn-info'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf"></i> Exportar a PDF',
+                    titleAttr: 'Exportar a PDF',
+                    className: 'btn btn-danger',
+                    customize: function(doc) {
+                        // Ocultar la columna de "Acciones"
+                        doc.content[1].table.body.forEach(function(row) {
+                            row.splice(-1, 1); // Eliminar la última celda (Acciones)
+                        });
+                        // Ajustar el ancho de las columnas al 80%
+                        doc.content[1].table.widths = ['20%', '60%'];
+                        
+                        // Personalizar estilos de la tabla
+                        doc.styles.tableHeader.fillColor = '#4CAF50';
+                        doc.styles.tableHeader.color = 'white';
+                        doc.styles.tableBodyEven.fillColor = '#f3f3f3';
+                        doc.styles.tableBodyOdd.fillColor = '#ffffff';
+                        doc.styles.title = {
+                            name: 'Roles',
+                            color: 'red',
+                            fontSize: '20',
+                            alignment: 'center'
+                        };
+                        doc.defaultStyle.alignment = 'center';
+
+                    }
+                }
+            ]
+        });
     });
 </script>
 

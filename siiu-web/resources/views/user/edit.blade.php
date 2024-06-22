@@ -83,6 +83,26 @@
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            
+            <div class="form-group">
+            <h3>Roles</h3>
+            <hr>
+            <div class="row">
+                @foreach ($roles as $index => $role)
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->id }}" id="role-{{ $role->id }}" {{ in_array($role->id, old('roles', $userRoles)) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="role-{{ $role->id }}">
+                                {{ $role->name }}
+                            </label>
+                        </div>
+                    </div>
+                    @if ($index % 2 == 1)
+                        </div><div class="row">
+                    @endif
+                @endforeach
+            </div>
+        </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button type="submit" class="btn btn-primary" style="--bs-btn-opacity: .5;">Guardar</button>
             </div>
