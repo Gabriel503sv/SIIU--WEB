@@ -37,6 +37,12 @@
                     <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
                     <label class="form-check-label" for="rememberMe">Recordar contraseña</label>
                   </div>
+
+                  @if ($errors->has('invalid_credentials'))
+                  <div class="alert alert-danger">
+                    {{ $errors->first('invalid_credentials') }}
+                  </div>
+                  @endif
                   <div class="text-center">
                     <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0" style="background-image: linear-gradient(120deg, #800000, #4b0000); color: white; border-color: transparent;">Ingresar</button>
                   </div>

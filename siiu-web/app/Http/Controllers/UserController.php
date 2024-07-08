@@ -43,7 +43,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
+            $validatedData = $request->validate([
                 'email' => 'required|unique:users,email',
                 'password' => 'required|min:8',
                 'password_confirmation' => 'required|same:password',
@@ -60,17 +60,16 @@ class UserController extends Controller
             ]);
 
 
-
-
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
             ]);
-            return redirect()->route('users.index')->with('agregado', 'SI');
+            return redirect()->route('user.index')->with('agregado', 'SI');
         } catch (Exception $e) {
 
-            return redirect()->route('users.index')->with('agregado', 'NO');
+            
+            return redirect()->route('user.index')->with('agregado', 'NO');
         }
     }
 

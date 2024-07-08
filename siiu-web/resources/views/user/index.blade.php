@@ -26,11 +26,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="row g-3 text-dark text-center" action="" method="POST" class="m-auto  w-form">
+                <form class="row g-3 text-dark text-center" action="{{ route('user.store') }}" method="POST" class="m-auto w-form" onsubmit="return validateForm()">
                     @csrf
                     <div class="col-md-6 mb-3">
                         <label for="name" class="form-label">Usuario</label>
-                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="4" value="{{ old('name', $user->name ?? '') }}">
+                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="8" value="{{ old('name', $user->name ?? '') }}">
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="email" class="form-label">Correo Electrónico</label>
-                        <input name="email" type="email" class="border-dark form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" value="{{ old('email', $user->email ?? '') }}">
+                        <input name="email" type="email" class="border-dark form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" required value="{{ old('email', $user->email ?? '') }}">
                         @error('email')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -49,6 +49,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="password" class="form-label">Contraseña</label>
                         <input name="password" type="password" class="border-dark form-control @error('password') is-invalid @enderror" id="password" required>
+                        <input type="checkbox" onclick="togglePassword('password')"> Mostrar Contraseña
                         @error('password')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -57,12 +58,20 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="password_confirmation" class="form-label">Confirmar Contraseña</label>
-                        <input name="password_confirmation" type="password" class="border-dark form-control" id="password_confirmation">
+                        <input name="password_confirmation" type="password" class="border-dark form-control" id="password_confirmation" required>
+                        <input type="checkbox" onclick="togglePassword('password_confirmation')"> Mostrar Contraseña
                     </div>
-
-
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <button type="submit text-center" class="btn  btn-primary  " style="--bs-btn-opacity: .5;">REGISTRAR</button>
+                        <button type="submit" class="btn btn-primary" style="--bs-btn-opacity: .5;">REGISTRAR</button>
                     </div>
                 </form>
             </div>
@@ -117,6 +126,64 @@
     </table>
 
 </div>
+
+<script>
+    function togglePassword(id) {
+        var input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+        } else {
+            input.type = "password";
+        }
+    }
+
+    function validateForm() {
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        var password_confirmation = document.getElementById('password_confirmation').value;
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+        if (name.length < 8) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El nombre debe tener al menos 8 caracteres.',
+            });
+            return false;
+        }
+
+        if (!emailRegex.test(email)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'El correo electrónico no es válido.',
+            });
+            return false;
+        }
+
+        if (!passwordRegex.test(password)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La contraseña debe tener al menos 8 caracteres, incluir letras mayúsculas y minúsculas, números y caracteres especiales, y no debe contener espacios.',
+            });
+            return false;
+        }
+
+        if (password !== password_confirmation) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La confirmación de la contraseña no coincide.',
+            });
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 
 <script>
