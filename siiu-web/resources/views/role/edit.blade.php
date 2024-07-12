@@ -13,7 +13,7 @@
         <div class="form-group">
             <label>Permisos</label>
             @foreach ($permissions as $permission)
-                <div class="form-check">
+                <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="permission-{{ $permission->id }}"
                     {{ in_array($permission->id, old('permissions', $rolePermissions)) ? 'checked' : '' }}>
                     <label class="form-check-label" for="permission-{{ $permission->id }}">

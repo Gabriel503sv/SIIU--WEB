@@ -20,7 +20,7 @@ class CreateAfterUserInsertTrigger extends Migration
             FOR EACH ROW
             BEGIN
                 INSERT INTO informacion_personals ( apellidos, nombres, fecha_nacimiento, genero, dui, nacionalidad,user_id)
-                VALUES ( "", "", "1000-01-01", "", "", "",NEW.id);
+                VALUES ( "", "", NOW() , "", "", "",NEW.id);
             END
         ');
     }

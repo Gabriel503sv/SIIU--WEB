@@ -19,25 +19,25 @@
 </div>
 
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header ">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">Crear Usuario</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close bg-primary" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form class="row g-3 text-dark text-center" action="{{ route('user.store') }}" method="POST" class="m-auto w-form" onsubmit="return validateForm()">
-                    @csrf
-                    <div class="col-md-6 mb-3">
+            <form class="row g-3 text-dark text-center" action="{{ route('user.store') }}" method="POST" class="m-auto w-form" onsubmit="return validateForm()">
+                @csrf
+                <div class="modal-body ">
+                    <div class="col-md-12 mb-3">
                         <label for="name" class="form-label">Usuario</label>
-                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="8" value="{{ old('name', $user->name ?? '') }}">
+                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="8" value="{{ old('name', $user->name ?? '') }}" >
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                         @enderror
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <input name="email" type="email" class="border-dark form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" required value="{{ old('email', $user->email ?? '') }}">
                         @error('email')
@@ -46,7 +46,7 @@
                         </div>
                         @enderror
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                         <label for="password" class="form-label">Contraseña</label>
                         <input name="password" type="password" class="border-dark form-control @error('password') is-invalid @enderror" id="password" required>
                         <input type="checkbox" onclick="togglePassword('password')"> Mostrar Contraseña
@@ -56,10 +56,20 @@
                         </div>
                         @enderror
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                         <label for="password_confirmation" class="form-label">Confirmar Contraseña</label>
                         <input name="password_confirmation" type="password" class="border-dark form-control" id="password_confirmation" required>
                         <input type="checkbox" onclick="togglePassword('password_confirmation')"> Mostrar Contraseña
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="departamento_id" class="form-label">Departamento:</label>
+                        <select class="form-control" id="departamento_id" name="departamento_id">
+                            <option value="">Seleccione un departamento</option>
+                            @foreach ($departamentos as $departamento)
+                            <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     @if ($errors->any())
                     <div class="alert alert-danger">
@@ -70,15 +80,15 @@
                         </ul>
                     </div>
                     @endif
-                    <div class="d-grid gap-2 col-6 mx-auto">
-                        <button type="submit" class="btn btn-primary" style="--bs-btn-opacity: .5;">REGISTRAR</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
 
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary" style="--bs-btn-opacity: .5;">REGISTRAR</button>
+
+                </div>
+            </form>
+            
         </div>
     </div>
 </div>
@@ -126,6 +136,28 @@
     </table>
 
 </div>
+
+<script>
+    (function() {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
 
 <script>
     function togglePassword(id) {

@@ -1,12 +1,40 @@
 <!-- Navbar -->
+
+@php
+    // Mapa de traducción de rutas
+    $translations = [
+        'home' => 'Inicio',
+        'user' => 'Usuarios',
+        'role' => 'Roles',
+        'edit' => 'Editar',
+
+        // Añade más traducciones según sea necesario
+    ];
+
+    // Obtén la ruta actual
+    $currentPath = Request::path();
+
+    // Divide la ruta en segmentos
+    $segments = explode('/', $currentPath);
+
+    // Traduce cada segmento si existe en el mapa
+    foreach ($segments as &$segment) {
+        if (array_key_exists($segment, $translations)) {
+            $segment = $translations[$segment];
+        }
+    }
+
+    // Junta los segmentos de nuevo en una cadena
+    $translatedPath = implode(' / ', $segments);
+@endphp
+
 <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
     <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-                <li class="breadcrumb-item text-sm text-dark active text-capitalize" aria-current="page">{{ str_replace('-', ' ', Request::path()) }}</li>
+                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">{{ $translations['home'] }}</a></li>
+                <li class="breadcrumb-item text-sm text-dark active text-capitalize" aria-current="page">{{ $translatedPath }}</li>
             </ol>
-            <h6 class="font-weight-bolder mb-0 text-capitalize">{{ str_replace('-', ' ', Request::path()) }}</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 d-flex justify-content-end" id="navbar">
             <ul class="navbar-nav  justify-content-end">
@@ -15,7 +43,7 @@
                             @csrf
                             <button type="submit" style="
                             background: none;border: none;padding: 0;text-decoration: none;color: gray;">
-                                <i class="fa fa-user me-sm-1"></i> logout
+                                <i class="fa fa-user me-sm-1"></i> Cerrar sesion
                             </button>
                         </form>
                 </li>

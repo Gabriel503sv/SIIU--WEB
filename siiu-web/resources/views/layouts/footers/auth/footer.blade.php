@@ -2,10 +2,10 @@
     <div class="container">
       <div class="row">
       <div class="col-lg-8 mb-4 mx-auto text-center">
-          <a href="http://fmoues.edu.sv/index.php/fmo/historia" target="_blank" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
+          <a href="http://fmoues.edu.sv/index.php/fmo/historia" target="_blank" class="text-secondary h5 me-xl-5 me-3 mb-sm-0 mb-2">
               About Us
           </a>
-          <a href="http://fmoues.edu.sv/" target="_blank" class="text-secondary me-xl-5 me-3 mb-sm-0 mb-2">
+          <a href="http://fmoues.edu.sv/" target="_blank" class="text-secondary h5 me-xl-5 me-3 mb-sm-0 mb-2">
               Blog
           </a>
       </div>

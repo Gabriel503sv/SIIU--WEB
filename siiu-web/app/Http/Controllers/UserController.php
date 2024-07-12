@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Http\Requests\UserRequest;
+use App\Models\Departamento;
 use App\Models\InformacionPersonal;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,9 +23,9 @@ class UserController extends Controller
     public function index()
     {
         $users = User::paginate();
-        $rolesCount = Role::withCount('users')->get(); // Obtener roles con el conteo de usuarios
+        $departamentos = Departamento::all();
     
-        return view('user.index', compact('users', 'rolesCount'))
+        return view('user.index', compact('users', 'departamentos'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 

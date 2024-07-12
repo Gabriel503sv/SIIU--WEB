@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -39,4 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class);
     //Roles
     Route::resource('role',RoleController::class);
+    //Departamentos
+    Route::resource('departamentos', DepartamentoController::class);
 });

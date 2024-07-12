@@ -1,34 +1,95 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
+<?php
+$fechaActual = date("j M, Y"); // M: mes (e.g. Jan), j: día del mes (1-31), Y: año (4 dígitos)
+?>
+
+
 <div class="container">
-    <div class="">
-        <div class="row m-3">
-            <div class="col-md-5  justify-content-center align-items-center shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
-                <h3 class=" text-center">Usuarios</h3>
-                <div class="table-responsive">
-                    <table class="table align-items-center mb-0">
-                        <thead class="table-primary text-center">
-                            <tr>
-                                
-                                <th>Número de Usuarios</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           
-                            <tr class="text-center  "> 
-                                <td class="h4" >{{ $userCount }}</td>
-                            </tr>
-                           
-                        </tbody>
-                    </table>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
                 </div>
             </div>
-            <div class="col-md-6 text-center mx-auto shadow-lg p-3 mb-5 bg-body rounded rounded-3">
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
             </div>
-            <div class="col-md-12 d-flex justify-content-center align-items-center shadow-lg p-3 mb-5 bg-body rounded rounded-3">
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="lead">Usuarios </div>
+                    <h2 class="card-title">{{ $userCount }}</h2>
+                    <p class="small text-muted"> Hasta el <?= $fechaActual ?>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 @endsection
