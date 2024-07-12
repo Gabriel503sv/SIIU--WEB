@@ -20,7 +20,7 @@ class CreateInformacionPersonalsTable extends Migration
             $table->date('fecha_nacimiento');
             $table->string('genero');
             $table->string('dui')->nullable();
-            $table->string('nacionalidad');
+            $table->string('telefono');
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
@@ -32,7 +32,7 @@ class CreateInformacionPersonalsTable extends Migration
             $table->date('fecha_nacimiento');
             $table->string('genero');
             $table->string('dui')->nullable();
-            $table->string('nacionalidad');
+            $table->string('telefono');
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });

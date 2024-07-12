@@ -23,9 +23,10 @@ class UserController extends Controller
     public function index()
     {
         $users = User::paginate();
+        $usersDelets = User::onlyTrashed()->get();
         $departamentos = Departamento::all();
-    
-        return view('user.index', compact('users', 'departamentos'))
+
+        return view('user.index', compact('users', 'departamentos', 'usersDelets'))
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
@@ -49,6 +50,7 @@ class UserController extends Controller
                 'password' => 'required|min:8',
                 'password_confirmation' => 'required|same:password',
                 'name' => 'required',
+                'departamento_id' => 'nullable|exists:departamentos,id',
 
             ], [
                 'email.required' => 'El correo es requerido',
@@ -65,11 +67,12 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
+                'departamento_id' => $request->departamento_id,
             ]);
             return redirect()->route('user.index')->with('agregado', 'SI');
         } catch (Exception $e) {
 
-            
+
             return redirect()->route('user.index')->with('agregado', 'NO');
         }
     }
@@ -90,10 +93,11 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::with('informacionPersonal')->find($id);
+        $departamentos = Departamento::all();
         $roles = Role::all();
         $userRoles = $user->roles->pluck('id')->toArray();
 
-        return view('user.edit', compact('user', 'roles', 'userRoles'));
+        return view('user.edit', compact('user', 'roles', 'userRoles', 'departamentos'));
     }
 
     /**
@@ -102,46 +106,44 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         try {
-
-            // Validar los datos de entrada
-            $request->validate([
+            $validatedData = $request->validate([
                 'email' => 'required|unique:users,email,' . $user->id,
                 'password' => 'nullable|min:8',
                 'password_confirmation' => 'nullable|same:password',
                 'name' => 'required',
+                'departamento_id' => 'required|exists:departamentos,id',
                 'apellidos' => 'required',
                 'nombres' => 'required',
                 'fecha_nacimiento' => 'required|date',
                 'genero' => 'required',
                 'dui' => 'required',
-                'nacionalidad' => 'required'
+                'telefono' => 'required'
             ], [
                 'email.required' => 'El correo es requerido',
                 'email.unique' => 'El correo ya ha sido usado',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres',
                 'password_confirmation.same' => 'Las contraseñas no coinciden',
                 'name.required' => 'El nombre es requerido',
+                'departamento_id.required' => 'El departamento es requerido',
+                'departamento_id.exists' => 'El departamento no es válido',
                 'apellidos.required' => 'Los apellidos son requeridos',
                 'nombres.required' => 'Los nombres son requeridos',
                 'fecha_nacimiento.required' => 'La fecha de nacimiento es requerida',
                 'fecha_nacimiento.date' => 'La fecha de nacimiento no es válida',
                 'genero.required' => 'El género es requerido',
                 'dui.required' => 'El DUI es requerido',
-                'nacionalidad.required' => 'La nacionalidad es requerida'
+                'telefono.required' => 'El teléfono es requerido'
             ]);
 
-            // Actualizar el usuario
-            $userData = $request->only('name', 'email');
+            $userData = $request->only('name', 'email', 'departamento_id');
             if ($request->filled('password')) {
                 $userData['password'] = bcrypt($request->password);
             }
             $user->update($userData);
 
-            // Asignar roles al usuario
             $user->syncRoles($request->roles);
 
-            // Actualizar la información personal
-            $informacionPersonalData = $request->only('apellidos', 'nombres', 'fecha_nacimiento', 'genero', 'dui', 'nacionalidad');
+            $informacionPersonalData = $request->only('apellidos', 'nombres', 'fecha_nacimiento', 'genero', 'dui', 'telefono');
             $informacionPersonal = $user->informacionPersonal;
             if ($informacionPersonal) {
                 $informacionPersonal->update($informacionPersonalData);
@@ -150,14 +152,9 @@ class UserController extends Controller
                 InformacionPersonal::create($informacionPersonalData);
             }
 
-            // Confirmar la transacción
-
-
             return redirect()->route('user.index')->with('Actualizado', 'SI');
         } catch (Exception $e) {
-            // Revertir la transacción en caso de error
-
-            return redirect()->route('users.index')->with('Actualizado', 'NO');
+            return redirect()->route('user.index')->with('Actualizado', 'NO');
         }
     }
 
@@ -168,6 +165,18 @@ class UserController extends Controller
             return redirect()->back()->with('eliminado', 'SI');
         } else {
             return redirect()->back()->with('eliminado', 'NO');
+        }
+    }
+
+    public function restore($id)
+    {
+        $user = User::withTrashed()->find($id);
+
+        if ($user) {
+            $user->restore();
+            return redirect()->back()->with('Restaurado', 'SI');
+        } else {
+            return redirect()->back()->with('Restaurado', 'NO');
         }
     }
 }

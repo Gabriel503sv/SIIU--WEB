@@ -15,7 +15,7 @@ class InformacionPersonal extends Model
         'fecha_nacimiento',
         'genero',
         'dui',
-        'nacionalidad',
+        'telefono',
         'user_id',
     ];
 

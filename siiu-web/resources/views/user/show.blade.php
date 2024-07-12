@@ -20,6 +20,11 @@
                     <td>{{ $user->email }}</td>
 
                 </tr>
+                <tr>
+                    <th scope="row">Departamento: </th>
+                    <td>{{ $user->departamento->nombre }}</td>
+
+                </tr>
 
             </tbody>
         </table>
@@ -53,8 +58,8 @@
                     <td>{{ $user->informacionPersonal->dui }}</td>
                 </tr>
                 <tr>
-                    <th scope="row">NACIONALIDAD: </th>
-                    <td>{{ $user->informacionPersonal->nacionalidad }}</td>
+                    <th scope="row">TELEFONO: </th>
+                    <td>{{ $user->informacionPersonal->telefono }}</td>
                 </tr>
 
             </tbody>

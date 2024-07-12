@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Departamento;
 use App\Models\InformacionPersonal;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -25,11 +26,16 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->call(RoleSeeder::class);
+
+        Departamento::create([
+            'nombre' => 'Sistemas Informaticos',
+        ]);
         
         User::create([
-            'name' => 'Admin User',
+            'name' => 'Administrador',
             'email' => 'admin@example.com',
             'password' => Hash::make('1234'), // Recuerda cambiar esto por la contraseña real
+            'departamento_id' => 1,
         ])->assignRole('Admin');
 
         

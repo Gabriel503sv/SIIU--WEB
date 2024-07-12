@@ -30,7 +30,7 @@
                 <div class="modal-body ">
                     <div class="col-md-12 mb-3">
                         <label for="name" class="form-label">Usuario</label>
-                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="8" value="{{ old('name', $user->name ?? '') }}" >
+                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="8" value="{{ old('name', $user->name ?? '') }}">
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -88,190 +88,108 @@
 
                 </div>
             </form>
-            
+
         </div>
     </div>
 </div>
-<div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
-    <table id="example" class="table align-items-center mb-0" style="width:100% ">
-        <thead class="table-primary text-center">
-            <tr>
-                <th>#</th>
-                <th>Usuario</th>
-                <th>Email</th>
-                <th class="w-25">ACCIONES</th>
 
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $key => $user)
-            <tr>
-                <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Usuarios</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Eliminados</button>
+
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
+            <table id="example" class="table align-items-center mb-0" style="width:100% ">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Usuario</th>
+                        <th>Correo</th>
+                        <th>Departamento</th>
+                        <th class="w-20">ACCIONES</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($users as $key => $user)
+                    <tr>
+                        <th scope="row">{{ $key + 1 }}</th>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->departamento->nombre }}</td>
 
 
 
-                <td>
-                    <div class="row gx-3">
-                        <div class="col">
-                            <a href="{{ route('user.show', $user->id) }}" style="width: 100%" class="btn btn-info  mb-3"><i class='bx bxs-show'></i></a>
-                        </div>
-                        <div class="col">
-                            <a href="{{ route('user.edit', $user->id) }}" style="width: 100%" class="btn btn-success  mb-3"><i class='bx bxs-edit-alt'></i></a>
-                        </div>
-                        <div class="col">
-                            <form method="POST" class="formulario-eliminar" action="{{ route('user.destroy', $user->id) }}">
-                                @method('DELETE')
+
+                        <td>
+                            <div class="row gx-3">
+                                <div class="col">
+                                    <a href="{{ route('user.show', $user->id) }}" style="width: 100%" class="btn btn-cyan-800  mb-3"><i class='bx bxs-show'></i></a>
+                                </div>
+                                <div class="col">
+                                    <a href="{{ route('user.edit', $user->id) }}" style="width: 100%" class="btn btn-green-600  mb-3"><i class='bx bxs-edit-alt'></i></a>
+                                </div>
+                                <div class="col">
+                                    <form method="POST" class="formulario-eliminar" action="{{ route('user.destroy', $user->id) }}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button style="width: 100%" class="btn btn-red-800"><i class='bx bxs-trash'></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
+            <table id="restaurar" class="table align-items-center mb-0" style="width:100% ">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Fecha Eliminación</th>
+                        <th class="w-10">Restaurar</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($usersDelets as $key => $user)
+                    <tr>
+                        <td class="text-center " scope="row">{{ $key + 1 }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->deleted_at }}</td> <!-- Fecha de eliminación -->
+                        <td>
+                            <!-- Formulario para restaurar el usuario -->
+                            <form action="{{ route('user.restore', $user->id) }}" class="formulario-restaurar" method="POST">
                                 @csrf
-                                <button style="width: 100%" class="btn btn-danger"><i class='bx bxs-trash'></i></button>
+                                @method('PUT')
+                                <button class="btn btn-cyan-800  mb-3" type="submit">Restaurar</button>
                             </form>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
 
-    </table>
+            </table>
+
+        </div>
+    </div>
 
 </div>
 
-<script>
-    (function() {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function(form) {
-                form.addEventListener('submit', function(event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
-</script>
-
-<script>
-    function togglePassword(id) {
-        var input = document.getElementById(id);
-        if (input.type === "password") {
-            input.type = "text";
-        } else {
-            input.type = "password";
-        }
-    }
-
-    function validateForm() {
-        var name = document.getElementById('name').value;
-        var email = document.getElementById('email').value;
-        var password = document.getElementById('password').value;
-        var password_confirmation = document.getElementById('password_confirmation').value;
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-
-        if (name.length < 8) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'El nombre debe tener al menos 8 caracteres.',
-            });
-            return false;
-        }
-
-        if (!emailRegex.test(email)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'El correo electrónico no es válido.',
-            });
-            return false;
-        }
-
-        if (!passwordRegex.test(password)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La contraseña debe tener al menos 8 caracteres, incluir letras mayúsculas y minúsculas, números y caracteres especiales, y no debe contener espacios.',
-            });
-            return false;
-        }
-
-        if (password !== password_confirmation) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La confirmación de la contraseña no coincide.',
-            });
-            return false;
-        }
-
-        return true;
-    }
-</script>
-
-
-<script>
-    $(document).ready(function() {
-        $('#example').DataTable({
-            responsive: true,
-            language: {
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sSearch": "Buscar:",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando...",
-                "oPaginate": {
-                    "sFirst": '<i class="fas fa-angle-double-left"></i>',
-                    "sLast": '<i class="fas fa-angle-double-right"></i>',
-                    "sNext": '<i class="fas fa-angle-right"></i>',
-                    "sPrevious": '<i class="fas fa-angle-left"></i>'
-
-                },
-                "oAria": {
-                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                },
-                "buttons": {
-                    "copy": "Copiar",
-                    "colvis": "Visibilidad"
-                }
-            },
-            dom: '<"top"Bf>rt<"bottom"lip><"clear">',
-            buttons: [{
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
-                    titleAttr: 'Exportar a Excel',
-                    className: 'btn btn-success'
-                },
-                {
-                    extend: 'csvHtml5',
-                    text: '<i class="fas fa-file-csv"></i> Exportar a CSV',
-                    titleAttr: 'Exportar a CSV',
-                    className: 'btn btn-info'
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf"></i> Exportar a PDF',
-                    titleAttr: 'Exportar a PDF',
-                    className: 'btn btn-danger'
-                }
-            ]
-        });
-    });
-</script>
+<script src="{{ asset('assets/js/Usuarios/UserIndex.js') }}"></script>
 
 @if (session('agregado') == "SI")
 <script>
@@ -338,27 +256,28 @@
     });
 </script>
 @endif
-
-
+@if (session('Restaurado') == 'SI')
 <script>
-    $('.formulario-eliminar').submit(function(e) {
-        e.preventDefault();
-
-        Swal.fire({
-            title: '¿Estas seguro?',
-            text: "Este Usuario se eliminara definitivamente",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, Eliminar!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.submit();
-            }
-        })
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire(
+            'Agregado',
+            'Usuario se restauro correctamente.',
+            'success'
+        );
     });
 </script>
+@elseif (session('Restaurado') == 'NO')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire(
+            'Error',
+            'Usuario no se pudo restaurar',
+            'error'
+        );
+    });
+</script>
+@endif
+
 
 
 @endsection

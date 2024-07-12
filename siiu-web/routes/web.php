@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     //usuario
     Route::resource('user', UserController::class);
+    Route::put('/user/{id}/restore', [UserController::class, 'restore'])->name('user.restore');
     //Roles
     Route::resource('role',RoleController::class);
     //Departamentos

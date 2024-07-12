@@ -4,32 +4,38 @@
 
 
 <div class="container-md">
-    
-    <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 bg-primary">
-        <br>
-        <div>
+    <div class="card text-center">
+        <div class="card-header bg-primary">
             <H2 class="text-center text-white ">INFORMACION DEL USUARIO</H2>
         </div>
-        
-        <br>
-        <hr><br>
-
-        <form class="row g-3 text-dark text-center" action="{{ route('user.update', $user->id) }}" method="POST" class="m-auto w-form">
+        <div class="card-body">
+        <form class="row g-3 text-dark text-center" action="{{ route('user.update', $user->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="col-md-4 mb-3">
                 <label for="name" class="form-label">Usuario</label>
-                <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="4" value="{{ old('name', $user->name ?? '') }}">
+                <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="4" value="{{ old('name', $user->name) }}">
                 @error('name')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
             <div class="col-md-4 mb-3">
                 <label for="email" class="form-label">Correo Electrónico</label>
-                <input name="email" type="email" class="border-dark form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" value="{{ old('email', $user->email ?? '') }}">
+                <input name="email" type="email" class="border-dark form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" value="{{ old('email', $user->email) }}">
                 @error('email')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="departamento_id">Departamento</label>
+                <select name="departamento_id" id="departamento_id" class="form-control">
+                    <option value="">Seleccione un departamento</option>
+                    @foreach($departamentos as $departamento)
+                    <option value="{{ $departamento->id }}" {{ $user->departamento_id == $departamento->id ? 'selected' : '' }}>
+                        {{ $departamento->nombre }}
+                    </option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-4 mb-3">
                 <label for="password" class="form-label">Contraseña</label>
@@ -65,7 +71,12 @@
             </div>
             <div class="col-md-4 mb-3">
                 <label for="genero" class="form-label">Género</label>
-                <input name="genero" type="text" class="border-dark form-control @error('genero') is-invalid @enderror" id="genero" value="{{ old('genero', $user->informacionPersonal->genero ?? '') }}">
+                <select name="genero" class="border-dark form-control @error('genero') is-invalid @enderror" id="genero">
+                    <option value="">Seleccione una opción</option>
+                    <option value="Masculino" {{ old('genero', $user->informacionPersonal->genero ?? '') == 'Masculino' ? 'selected' : '' }}>Masculino</option>
+                    <option value="Femenino" {{ old('genero', $user->informacionPersonal->genero ?? '') == 'Femenino' ? 'selected' : '' }}>Femenino</option>
+                    <option value="Otro" {{ old('genero', $user->informacionPersonal->genero ?? '') == 'Otro' ? 'selected' : '' }}>Otro</option>
+                </select>
                 @error('genero')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -78,18 +89,18 @@
                 @enderror
             </div>
             <div class="col-md-4 mb-3">
-                <label for="nacionalidad" class="form-label">Nacionalidad</label>
-                <input name="nacionalidad" type="text" class="border-dark form-control @error('nacionalidad') is-invalid @enderror" id="nacionalidad" value="{{ old('nacionalidad', $user->informacionPersonal->nacionalidad ?? '') }}">
-                @error('nacionalidad')
+                <label for="telefono" class="form-label">Telefono</label>
+                <input name="telefono" type="text" class="border-dark form-control @error('telefono') is-invalid @enderror" id="telefono" value="{{ old('telefono', $user->informacionPersonal->telefono ?? '') }}">
+                @error('telefono')
                 <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-            
+
             <div class="form-group">
-            <h3>Roles</h3>
-            <hr>
-            <div class="row">
-                @foreach ($roles as $index => $role)
+                <h3>Roles</h3>
+                <hr>
+                <div class="row">
+                    @foreach ($roles as $index => $role)
                     <div class="col-md-6">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="roles[]" value="{{ $role->id }}" id="role-{{ $role->id }}" {{ in_array($role->id, old('roles', $userRoles)) ? 'checked' : '' }}>
@@ -99,16 +110,23 @@
                         </div>
                     </div>
                     @if ($index % 2 == 1)
-                        </div><div class="row">
+                </div>
+                <div class="row">
                     @endif
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-        </div>
             <div class="d-grid gap-2 col-6 mx-auto">
                 <button type="submit" class="btn btn-primary" style="--bs-btn-opacity: .5;">Guardar</button>
             </div>
         </form>
+        </div>
+        <div class="card-footer text-muted">
+            2 days ago
+        </div>
     </div>
+
+    
 </div>
 
 
