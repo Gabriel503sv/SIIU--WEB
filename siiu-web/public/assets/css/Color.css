@@ -1,0 +1,60 @@
+.btn-green-600 {
+    background-color: #059669; /* Código hexadecimal para green-600 en Tailwind */
+    color: white; /* Color del texto en blanco */
+}
+
+.btn-green-600:hover {
+    background-color: #047857; /* Color para el estado hover */
+}
+
+
+.btn-red-800 {
+    background-color: #991b1b; /* Código hexadecimal para red-800 en Tailwind */
+    color: white; /* Color del texto en blanco */
+}
+
+.btn-red-800:hover {
+    background-color: #7f1d1d; /* Color para el estado hover */
+}
+
+.btn-cyan-800 {
+    background-color: #0b4f6c; /* Código hexadecimal para cyan-800 en Tailwind */
+    color: white; /* Color del texto en blanco */
+}
+
+.btn-cyan-800:hover {
+    background-color: #0a445d; /* Color para el estado hover */
+}
+
+.btn-indigo-800 {
+    background-color: #4c51bf; /* Código hexadecimal para indigo-800 en Tailwind */
+    color: white; /* Color del texto en blanco */
+}
+
+.btn-indigo-800:hover {
+    background-color: #434190; /* Color para el estado hover */
+}
+.btn-gray-600 {
+    background-color: #718096; /* Código hexadecimal para gray-600 en Tailwind */
+    color: white; /* Color del texto en blanco */
+}
+
+.btn-gray-600:hover {
+    background-color: #4a5568; /* Color para el estado hover */
+}
+.btn-gray-700 {
+    background-color: #4a5568; /* Código hexadecimal para gray-700 en Tailwind */
+    color: white; /* Color del texto en blanco */
+}
+
+.btn-gray-700:hover {
+    background-color: #2d3748; /* Color para el estado hover */
+}
+.btn-gray-800 {
+    background-color: #374151; /* Código hexadecimal para gray-800 en Tailwind */
+    color: white; /* Color del texto en blanco */
+}
+
+.btn-gray-800:hover {
+    background-color: #2f3943; /* Color para el estado hover */
+}
