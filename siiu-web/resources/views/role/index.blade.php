@@ -18,6 +18,7 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -30,7 +31,7 @@
                     @csrf
                     <div class="col-md-12 mb-3">
                         <label for="name" class="form-label">role</label>
-                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="4" value="{{ old('name', $role->name ?? '') }}">
+                        <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="4" pattern="[A-Za-z\s]+" title="Ingrese solo letras y espacios" value="{{ old('name', $role->name ?? '') }}">
                         @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -50,212 +51,128 @@
         </div>
     </div>
 </div>
-<div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
-    <table id="example" class="table align-items-center mb-0" style="width:100% ">
-        <thead class="table-primary text-center">
-            <tr>
-                <th class="w-25">#</th>
-                <th class="w-50">ROLES</th>
-                <th class="w-25">ACCIONES</th>
 
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Roles</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Eliminados</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
+            <table id="Principal" class="table align-items-center mb-0" style="width:100% ">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th class="w-25">#</th>
+                        <th class="w-50">ROLES</th>
+                        <th class="w-15">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($roles as $key => $role)
+                    <tr>
+                        <th scope="row">{{ $key + 1 }}</th>
+                        <td>{{ $role->name }}</td>
+                        <td>
+                            <div class="row gx-3">
 
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($roles as $key => $role)
-            <tr>
-                <th scope="row">{{ $key + 1 }}</th>
-                <td>{{ $role->name }}</td>
-
-
-
-
-                <td>
-                    <div class="row gx-3">
-
-                        <div class="col">
-                            <a href="{{ route('role.edit', $role->id) }}" style="width: 100%" class="btn btn-success  mb-3"><i class='bx bxs-edit-alt'></i></a>
-                        </div>
-                        <div class="col">
-                            <form method="POST" class="formulario-eliminar" action="{{ route('role.destroy', $role->id) }}">
-                                @method('DELETE')
+                                <div class="col">
+                                    <a href="{{ route('role.edit', $role->id) }}" style="width: 100%" class="btn btn-green-600  mb-3"><i class='bx bxs-edit-alt'></i></a>
+                                </div>
+                                <div class="col">
+                                    <form method="POST" class="formulario-eliminar" action="{{ route('role.destroy', $role->id) }}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button style="width: 100%" class="btn btn-red-800"><i class='bx bxs-trash'></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
+            <table id="restaurar" class="table align-items-center mb-0" style="width:100% ">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th >#</th>
+                        <th >Role</th>
+                        <th>Fecha Eliminación</th>
+                        <th class="w-15">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($rolesDelets as $key => $role)
+                    <tr>
+                        <th scope="row">{{ $key + 1 }}</th>
+                        <td>{{ $role->name }}</td>
+                        <td>{{ $role->deleted_at }}</td>
+                        <td>
+                             <!-- Formulario para restaurar el role -->
+                             <form action="{{ route('role.restore', $role->id) }}" class="formulario-restaurar" method="POST">
                                 @csrf
-                                <button style="width: 100%" class="btn btn-danger"><i class='bx bxs-trash'></i></button>
+                                @method('PUT')
+                                <button class="btn btn-cyan-800  mb-3" type="submit">Restaurar</button>
                             </form>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
 
-    </table>
+            </table>
+        </div>
+    </div>
+
 </div>
 
+<script src="{{ asset('assets/js/Tablas/tablas.js') }}"></script>
+<script src="{{ asset('assets/js/Roles/RolesIndex.js') }}"></script>
 
+@if ($errors->any())
 <script>
-    $(document).ready(function() {
-        $('#example').DataTable({
-            responsive: true,
-            language: {
-                "sProcessing": "Procesando...",
-                "sLengthMenu": "Mostrar _MENU_ registros",
-                "sZeroRecords": "No se encontraron resultados",
-                "sEmptyTable": "Ningún dato disponible en esta tabla",
-                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                "sSearch": "Buscar:",
-                "sInfoThousands": ",",
-                "sLoadingRecords": "Cargando...",
-                "oPaginate": {
-                    "sFirst": '<i class="fas fa-angle-double-left"></i>',
-                    "sLast": '<i class="fas fa-angle-double-right"></i>',
-                    "sNext": '<i class="fas fa-angle-right"></i>',
-                    "sPrevious": '<i class="fas fa-angle-left"></i>'
-
-                },
-                "oAria": {
-                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-                },
-                "buttons": {
-                    "copy": "Copiar",
-                    "colvis": "Visibilidad"
-                }
-            },
-            dom: '<"top"Bf>rt<"bottom"lip><"clear">',
-            buttons: [{
-                    extend: 'excelHtml5',
-                    text: '<i class="fas fa-file-excel"></i> Exportar a Excel',
-                    titleAttr: 'Exportar a Excel',
-                    className: 'btn btn-success'
-                },
-                {
-                    extend: 'csvHtml5',
-                    text: '<i class="fas fa-file-csv"></i> Exportar a CSV',
-                    titleAttr: 'Exportar a CSV',
-                    className: 'btn btn-info'
-                },
-                {
-                    extend: 'pdfHtml5',
-                    text: '<i class="fas fa-file-pdf"></i> Exportar a PDF',
-                    titleAttr: 'Exportar a PDF',
-                    className: 'btn btn-danger',
-                    customize: function(doc) {
-                        // Ocultar la columna de "Acciones"
-                        doc.content[1].table.body.forEach(function(row) {
-                            row.splice(-1, 1); // Eliminar la última celda (Acciones)
-                        });
-                        // Ajustar el ancho de las columnas al 80%
-                        doc.content[1].table.widths = ['20%', '60%'];
-                        
-                        // Personalizar estilos de la tabla
-                        doc.styles.tableHeader.fillColor = '#4CAF50';
-                        doc.styles.tableHeader.color = 'white';
-                        doc.styles.tableBodyEven.fillColor = '#f3f3f3';
-                        doc.styles.tableBodyOdd.fillColor = '#ffffff';
-                        doc.styles.title = {
-                            name: 'Roles',
-                            color: 'red',
-                            fontSize: '20',
-                            alignment: 'center'
-                        };
-                        doc.defaultStyle.alignment = 'center';
-
-                    }
-                }
-            ]
+    document.addEventListener('DOMContentLoaded', function() {
+        // Muestra el SweetAlert con el mensaje de error
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Role no se pudo crear'
+        }).then(() => {
+            // Después de cerrar el SweetAlert, abre el modal automáticamente
+            var modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+            modal.show();
         });
     });
 </script>
-
-@if (session('agregado') == "SI")
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Agregado',
-            'Usuario Agregado correctamente.',
-            'success'
-        )
-    });
-</script>
-@elseif (session('agregado') == "NO")
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Error',
-            'Usuario No agregado',
-            'error'
-        )
-    });
-</script>
 @endif
 
-@if (session('eliminado') == "SI")
+@foreach (['agregado', 'eliminado', 'Actualizado', 'Restaurado'] as $sessionKey)
+@if (session($sessionKey) == 'SI')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Eliminado',
-            'Usuario eliminado correctamente.',
-            'success'
-        )
-    });
-</script>
-@elseif (session('eliminado') == "NO")
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Error',
-            'Usuario No pudo ser eliminado ',
-            'error'
-        )
-    });
-</script>
-@endif
-
-@if (session('Actualizado') == 'SI')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Agregado',
-            'Usuario Actualizado correctamente.',
-            'success'
-        );
-    });
-</script>
-@elseif (session('Actualizado') == 'NO')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Error',
-            'Usuario no se pudo Actualizar',
-            'error'
-        );
-    });
-</script>
-@endif
-
-
-<script>
-    $('.formulario-eliminar').submit(function(e) {
-        e.preventDefault();
-
         Swal.fire({
-            title: '¿Estas seguro?',
-            text: "Este Usuario se eliminara definitivamente",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, Eliminar!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.submit();
-            }
-        })
+            icon: 'success',
+            title: '{{ ucfirst($sessionKey) }}',
+            text: 'Usuario {{ strtolower($sessionKey) }} correctamente.'
+        });
     });
 </script>
+@elseif (session($sessionKey) == 'NO')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario no se pudo {{ strtolower($sessionKey) }}'
+        });
+    });
+</script>
+@endif
+@endforeach
 
 
 @endsection

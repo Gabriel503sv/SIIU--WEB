@@ -11,9 +11,11 @@
 
         </div>
         <div class="col-md-4 d-flex justify-content-center align-items-center">
+            @can('user.create')
             <div>
                 <button type="button" class="btn btn-rounded btn-md btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Crear Usuario</button>
             </div>
+            @endcan
         </div>
     </div>
 </div>
@@ -32,18 +34,14 @@
                         <label for="name" class="form-label">Usuario</label>
                         <input name="name" type="text" class="border-dark form-control @error('name') is-invalid @enderror" id="name" aria-describedby="nameHelp" required minlength="8" value="{{ old('name', $user->name ?? '') }}">
                         @error('name')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-12 mb-3">
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <input name="email" type="email" class="border-dark form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp" required value="{{ old('email', $user->email ?? '') }}">
                         @error('email')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                        <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-12 mb-3">
@@ -51,9 +49,9 @@
                         <input name="password" type="password" class="border-dark form-control @error('password') is-invalid @enderror" id="password" required>
                         <input type="checkbox" onclick="togglePassword('password')"> Mostrar Contraseña
                         @error('password')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
+                        <small class="text-danger mt-1">
+                            <strong>{{ $message }}</strong>
+                        </small>
                         @enderror
                     </div>
                     <div class="col-md-12 mb-3">
@@ -64,22 +62,17 @@
 
                     <div class="form-group ">
                         <label for="departamento_id" class="form-label">Departamento:</label>
-                        <select class="form-control" id="departamento_id" name="departamento_id">
+                        <select class="form-control @error('departamento_id') is-invalid @enderror" id="departamento_id" name="departamento_id" required>
                             <option value="">Seleccione un departamento</option>
                             @foreach ($departamentos as $departamento)
                             <option value="{{ $departamento->id }}">{{ $departamento->nombre }}</option>
                             @endforeach
                         </select>
+
+                        @error('departamento_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif
 
                 </div>
                 <div class="modal-footer">
@@ -103,14 +96,14 @@
 <div class="tab-content" id="nav-tabContent">
     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
         <div class="shadow-lg p-3 mb-5 bg-body rounded rounded-3 ">
-            <table id="example" class="table align-items-center mb-0" style="width:100% ">
+            <table id="Principal" class="table align-items-center mb-0" style="width:100% ">
                 <thead class="table-primary text-center">
                     <tr>
                         <th>#</th>
                         <th>Usuario</th>
                         <th>Correo</th>
                         <th>Departamento</th>
-                        <th class="w-20">ACCIONES</th>
+                        <th class="w-15">ACCIONES</th>
 
                     </tr>
                 </thead>
@@ -121,25 +114,25 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->departamento->nombre }}</td>
-
-
-
-
                         <td>
                             <div class="row gx-3">
                                 <div class="col">
                                     <a href="{{ route('user.show', $user->id) }}" style="width: 100%" class="btn btn-cyan-800  mb-3"><i class='bx bxs-show'></i></a>
                                 </div>
+                                @can('user.edit')
                                 <div class="col">
                                     <a href="{{ route('user.edit', $user->id) }}" style="width: 100%" class="btn btn-green-600  mb-3"><i class='bx bxs-edit-alt'></i></a>
                                 </div>
+                                @endcan
+                                @can('user.destroy')
                                 <div class="col">
                                     <form method="POST" class="formulario-eliminar" action="{{ route('user.destroy', $user->id) }}">
                                         @method('DELETE')
                                         @csrf
-                                        <button style="width: 100%" class="btn btn-red-800"><i class='bx bxs-trash'></i></button>
+                                        <button style="width: 100%" class="btn btn-red-800" @if ($user->id === Auth::user()->id) disabled @endif><i class='bx bxs-trash'></i></button>
                                     </form>
                                 </div>
+                                @endcan
                             </div>
                         </td>
                     </tr>
@@ -171,12 +164,14 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->deleted_at }}</td> <!-- Fecha de eliminación -->
                         <td>
+                            @can('user.create')
                             <!-- Formulario para restaurar el usuario -->
                             <form action="{{ route('user.restore', $user->id) }}" class="formulario-restaurar" method="POST">
                                 @csrf
                                 @method('PUT')
                                 <button class="btn btn-cyan-800  mb-3" type="submit">Restaurar</button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach
@@ -189,94 +184,54 @@
 
 </div>
 
+
+<script src="{{ asset('assets/js/Tablas/tablas.js') }}"></script>
 <script src="{{ asset('assets/js/Usuarios/UserIndex.js') }}"></script>
 
-@if (session('agregado') == "SI")
+
+@if ($errors->any())
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Agregado',
-            'Usuario Agregado correctamente.',
-            'success'
-        )
-    });
-</script>
-@elseif (session('agregado') == "NO")
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Error',
-            'Usuario No agregado',
-            'error'
-        )
+        // Muestra el SweetAlert con el mensaje de error
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario no se pudo crear'
+        }).then(() => {
+            // Después de cerrar el SweetAlert, abre el modal automáticamente
+            var modal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+            modal.show();
+        });
     });
 </script>
 @endif
 
-@if (session('eliminado') == "SI")
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Eliminado',
-            'Usuario eliminado correctamente.',
-            'success'
-        )
-    });
-</script>
-@elseif (session('eliminado') == "NO")
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Error',
-            'Usuario No pudo ser eliminado ',
-            'error'
-        )
-    });
-</script>
-@endif
 
-@if (session('Actualizado') == 'SI')
+@foreach (['agregado', 'eliminado', 'Actualizado', 'Restaurado'] as $sessionKey)
+@if (session($sessionKey) == 'SI')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Agregado',
-            'Usuario Actualizado correctamente.',
-            'success'
-        );
+        Swal.fire({
+            icon: 'success',
+            title: '{{ ucfirst($sessionKey) }}',
+            text: 'Usuario {{ strtolower($sessionKey) }} correctamente.'
+        });
     });
 </script>
-@elseif (session('Actualizado') == 'NO')
+@elseif (session($sessionKey) == 'NO')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Error',
-            'Usuario no se pudo Actualizar',
-            'error'
-        );
-    });
-</script>
-@endif
-@if (session('Restaurado') == 'SI')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Agregado',
-            'Usuario se restauro correctamente.',
-            'success'
-        );
-    });
-</script>
-@elseif (session('Restaurado') == 'NO')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        Swal.fire(
-            'Error',
-            'Usuario no se pudo restaurar',
-            'error'
-        );
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Usuario no se pudo {{ strtolower($sessionKey) }}'
+        });
     });
 </script>
 @endif
+@endforeach
+
+
 
 
 

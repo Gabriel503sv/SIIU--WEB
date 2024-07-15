@@ -29,9 +29,12 @@
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
+      @if(auth()->user()->can('user.index') || auth()->user()->can('role.index'))
       <li class="nav-item mt-2">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Administracion Usuarios</h6>
       </li>
+      @endif
+      @can('user.index')
       <li class="nav-item">
         <a class="nav-link {{ (Request::is('user') ? 'active' : '') }} " href="{{ url('user') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -52,8 +55,11 @@
           </div>
           <span class="nav-link-text ms-1">Usuarios</span>
         </a>
-      </li>
+
+      </li>@endcan
+      @can('role.index')
       <li class="nav-item pb-2">
+
         <a class="nav-link {{ (Request::is('role') ? 'active' : '') }}" href="{{ url('role') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <i style="font-size: 1rem;" class="fa fa-users ps-2 pe-2 text-center text-dark {{ (Request::is('role') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
@@ -61,8 +67,9 @@
           <span class="nav-link-text ms-1">Roles</span>
         </a>
       </li>
+      @endcan
 
-      <li class="nav-item mt-2">
+      <!--li class="nav-item mt-2">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Administracion</h6>
       </li>
       <li class="nav-item">
@@ -112,7 +119,7 @@
           </div>
           <span class="nav-link-text ms-1">Historial</span>
         </a>
-      </li>
+      </li-->
       <li class="nav-item mt-3">
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Tu cuenta </h6>
       </li>
@@ -140,7 +147,7 @@
       <li class="nav-item">
         <a class="nav-link  " href="{{ url('static-sign-in') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-          <i style="font-size: 1rem;" class="fa fa-plus-square-o ps-2 pe-2 text-center text-dark {{ (Request::is('') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
+            <i style="font-size: 1rem;" class="fa fa-plus-square-o ps-2 pe-2 text-center text-dark {{ (Request::is('') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
           </div>
           <span class="nav-link-text ms-1">Crear Ticket</span>
         </a>

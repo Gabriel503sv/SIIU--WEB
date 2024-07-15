@@ -17,7 +17,7 @@
                 <h4 class="font-weight-bolder text-info text-gradient text-center" style="background-image: linear-gradient(120deg, #800000, #4b0000); color: white; border-color: transparent;">¡Bienvenido a SIIU!</h4>
               </div>
               <div class="card-body pt-0">
-                <form action="{{ route('login.verify') }}" method="POST" class="mb-5">
+                <form  action="{{ route('login.verify') }}" method="POST" class="mb-5">
                   @csrf
                   <label>Correo</label>
                   <div class="mb-3">
@@ -60,6 +60,7 @@
     </div>
   </section>
 </main>
+
 
 
 

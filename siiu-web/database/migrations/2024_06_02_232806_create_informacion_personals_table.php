@@ -15,24 +15,24 @@ class CreateInformacionPersonalsTable extends Migration
     {
         Schema::create('informacion_personals', function (Blueprint $table) {
             $table->id();
-            $table->string('apellidos');
-            $table->string('nombres');
-            $table->date('fecha_nacimiento');
-            $table->string('genero');
-            $table->string('dui')->nullable();
-            $table->string('telefono');
+            $table->string('apellidos')->nullable();
+            $table->string('nombres')->nullable();
+            $table->date('fecha_nacimiento')->nullable();
+            $table->string('genero')->nullable();
+            $table->string('dui')->unique()->nullable();
+            $table->string('telefono')->unique()->nullable();
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
 
         Schema::create('informacion_personal', function (Blueprint $table) {
             $table->id();
-            $table->string('apellidos');
-            $table->string('nombres');
-            $table->date('fecha_nacimiento');
-            $table->string('genero');
-            $table->string('dui')->nullable();
-            $table->string('telefono');
+            $table->string('apellidos')->nullable();
+            $table->string('nombres')->nullable();
+            $table->date('fecha_nacimiento')->nullable();
+            $table->string('genero')->nullable();
+            $table->string('dui')->unique()->nullable();
+            $table->string('telefono')->unique()->nullable();
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });

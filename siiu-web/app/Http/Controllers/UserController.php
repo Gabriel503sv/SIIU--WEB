@@ -17,9 +17,15 @@ use Spatie\Permission\Models\Role;
  */
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct()
+    {
+        $this->middleware('can:user.index')->only('index');
+        $this->middleware('can:user.create')->only('create','store');
+        $this->middleware('can:user.edit')->only('edit','update');
+        $this->middleware('can:user.destroy')->only('destroy');
+        $this->middleware('can:user.restore')->only('restore');
+    }
+
     public function index()
     {
         $users = User::paginate();
@@ -30,56 +36,47 @@ class UserController extends Controller
             ->with('i', (request()->input('page', 1) - 1) * $users->perPage());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         $user = new User();
         return view('user.create', compact('user'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+   
     public function store(Request $request)
     {
-        try {
-            $validatedData = $request->validate([
-                'email' => 'required|unique:users,email',
-                'password' => 'required|min:8',
-                'password_confirmation' => 'required|same:password',
-                'name' => 'required',
-                'departamento_id' => 'nullable|exists:departamentos,id',
 
-            ], [
-                'email.required' => 'El correo es requerido',
-                'email.unique' => 'El correo ya ha sido usado',
-                'password.required' => 'La contraseña es requerida',
-                'password.min' => 'La contraseña debe tener 8 caracteres',
-                'password_confirmation.required' => 'La confirmacion de la contraseña es requerida',
-                'password.same' => 'La contraseñas no coinciden',
-                'name.required' => 'el nombre es requerido'
-            ]);
+        $request->validate([
+            'email' => 'required|unique:users,email',
+            'password' => 'required|min:8',
+            'password_confirmation' => 'required|same:password',
+            'name' => 'required',
+            'departamento_id' => 'required|exists:departamentos,id',
 
+        ], [
+            'email.required' => 'El correo es requerido',
+            'email.unique' => 'El correo ya ha sido usado',
+            'password.required' => 'La contraseña es requerida',
+            'password.min' => 'La contraseña debe tener 8 caracteres',
+            'password_confirmation.required' => 'La confirmacion de la contraseña es requerida',
+            'password.same' => 'La contraseñas no coinciden',
+            'name.required' => 'el nombre es requerido',
+            'departamento_id.required' => 'El departamento es requerido',
+            'departamento_id.exists' => 'El departamento seleccionado no es válido',
 
-            User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'departamento_id' => $request->departamento_id,
-            ]);
-            return redirect()->route('user.index')->with('agregado', 'SI');
-        } catch (Exception $e) {
-
-
-            return redirect()->route('user.index')->with('agregado', 'NO');
-        }
+        ]);
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'departamento_id' => $request->departamento_id,
+        ])->assignRole('Usuario');
+        
+        return redirect()->route('user.index')->with('agregado', 'SI');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    
     public function show($id)
     {
         $user = User::with('informacionPersonal')->find($id);
@@ -87,9 +84,7 @@ class UserController extends Controller
         return view('user.show', compact('user'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    
     public function edit($id)
     {
         $user = User::with('informacionPersonal')->find($id);
@@ -100,62 +95,59 @@ class UserController extends Controller
         return view('user.edit', compact('user', 'roles', 'userRoles', 'departamentos'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+   
     public function update(Request $request, User $user)
     {
-        try {
-            $validatedData = $request->validate([
-                'email' => 'required|unique:users,email,' . $user->id,
-                'password' => 'nullable|min:8',
-                'password_confirmation' => 'nullable|same:password',
-                'name' => 'required',
-                'departamento_id' => 'required|exists:departamentos,id',
-                'apellidos' => 'required',
-                'nombres' => 'required',
-                'fecha_nacimiento' => 'required|date',
-                'genero' => 'required',
-                'dui' => 'required',
-                'telefono' => 'required'
-            ], [
-                'email.required' => 'El correo es requerido',
-                'email.unique' => 'El correo ya ha sido usado',
-                'password.min' => 'La contraseña debe tener al menos 8 caracteres',
-                'password_confirmation.same' => 'Las contraseñas no coinciden',
-                'name.required' => 'El nombre es requerido',
-                'departamento_id.required' => 'El departamento es requerido',
-                'departamento_id.exists' => 'El departamento no es válido',
-                'apellidos.required' => 'Los apellidos son requeridos',
-                'nombres.required' => 'Los nombres son requeridos',
-                'fecha_nacimiento.required' => 'La fecha de nacimiento es requerida',
-                'fecha_nacimiento.date' => 'La fecha de nacimiento no es válida',
-                'genero.required' => 'El género es requerido',
-                'dui.required' => 'El DUI es requerido',
-                'telefono.required' => 'El teléfono es requerido'
-            ]);
 
-            $userData = $request->only('name', 'email', 'departamento_id');
-            if ($request->filled('password')) {
-                $userData['password'] = bcrypt($request->password);
-            }
-            $user->update($userData);
+        $request->validate([
+            'email' => 'required|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:8',
+            'password_confirmation' => 'nullable|same:password',
+            'name' => 'required',
+            'departamento_id' => 'required|exists:departamentos,id',
+            'apellidos' => 'required',
+            'nombres' => 'required',
+            'fecha_nacimiento' => 'required|date',
+            'genero' => 'required',
+            'dui' => 'required|unique:informacion_personals,dui,' . ($user->informacionPersonal ? $user->informacionPersonal->id : 'NULL') . ',user_id',
+            'telefono' => 'required|unique:informacion_personals,telefono,' . ($user->informacionPersonal ? $user->informacionPersonal->id : 'NULL') . ',user_id',
+        ], [
+            'email.required' => 'El correo es requerido',
+            'email.unique' => 'El correo ya ha sido usado',
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres',
+            'password_confirmation.same' => 'Las contraseñas no coinciden',
+            'name.required' => 'El nombre es requerido',
+            'departamento_id.required' => 'El departamento es requerido',
+            'departamento_id.exists' => 'El departamento no es válido',
+            'apellidos.required' => 'Los apellidos son requeridos',
+            'nombres.required' => 'Los nombres son requeridos',
+            'fecha_nacimiento.required' => 'La fecha de nacimiento es requerida',
+            'fecha_nacimiento.date' => 'La fecha de nacimiento no es válida',
+            'genero.required' => 'El género es requerido',
+            'dui.required' => 'El DUI es requerido',
+            'dui.unique' => 'El DUI ya ha sido usado',
+            'telefono.required' => 'El teléfono es requerido',
+            'telefono.unique' => 'El telefono ya ha sido usado',
+        ]);
 
-            $user->syncRoles($request->roles);
-
-            $informacionPersonalData = $request->only('apellidos', 'nombres', 'fecha_nacimiento', 'genero', 'dui', 'telefono');
-            $informacionPersonal = $user->informacionPersonal;
-            if ($informacionPersonal) {
-                $informacionPersonal->update($informacionPersonalData);
-            } else {
-                $informacionPersonalData['user_id'] = $user->id;
-                InformacionPersonal::create($informacionPersonalData);
-            }
-
-            return redirect()->route('user.index')->with('Actualizado', 'SI');
-        } catch (Exception $e) {
-            return redirect()->route('user.index')->with('Actualizado', 'NO');
+        $userData = $request->only('name', 'email', 'departamento_id');
+        if ($request->filled('password')) {
+            $userData['password'] = bcrypt($request->password);
         }
+        $user->update($userData);
+
+        $user->syncRoles($request->roles);
+
+        $informacionPersonalData = $request->only('apellidos', 'nombres', 'fecha_nacimiento', 'genero', 'dui', 'telefono');
+        $informacionPersonal = $user->informacionPersonal;
+        if ($informacionPersonal) {
+            $informacionPersonal->update($informacionPersonalData);
+        } else {
+            $informacionPersonalData['user_id'] = $user->id;
+            InformacionPersonal::create($informacionPersonalData);
+        }
+
+        return redirect()->route('user.index')->with('Actualizado', 'SI');
     }
 
     public function destroy($id)
